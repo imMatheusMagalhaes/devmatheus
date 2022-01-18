@@ -1,5 +1,5 @@
-import { DeleteResult, UpdateResult } from "typeorm"
-import { User } from "../entity/User"
+import { User } from "../entities/User"
+import HttpStatusCode from "../utils/HttpStatusCode"
 
 export class UserService {
 
@@ -8,20 +8,36 @@ export class UserService {
         return allUsers
     }
 
-    public static async save(userToSave: User): Promise<User> {
+    public static async findOne(id: string): Promise<any> {
+        const user = await User.findOne(id)
+        if (user)
+            return user
+        return Promise.reject().catch(() => HttpStatusCode.NOT_FOUND)
+    }
+
+    public static async save(userToSave: User): Promise<any> {
         const user = new User()
         user.nome = userToSave.nome
         user.email = userToSave.email
         user.info = userToSave.info
         const createdUser = await user.save()
-        return createdUser
+        if (createdUser)
+            return createdUser
+        return Promise.reject().catch(() => HttpStatusCode.INTERNAL_SERVER_ERROR)
     }
-    public static async delete(id: string): Promise<DeleteResult> {
-        const deleteUser = User.delete(id)
-        return deleteUser
+
+    public static async delete(id: string): Promise<any> {
+        const deleteUser = await User.delete(id)
+        if (deleteUser)
+            return deleteUser
+        return Promise.reject().catch(() => HttpStatusCode.INTERNAL_SERVER_ERROR)
     }
-    public static async update(id: string, user: User): Promise<UpdateResult> {
+
+    public static async update(id: string, user: User): Promise<any> {
         const updatedUser = await User.update(id, user)
-        return updatedUser
+        if (updatedUser)
+            return updatedUser
+        return Promise.reject().catch(() => HttpStatusCode.INTERNAL_SERVER_ERROR)
     }
+    
 }
