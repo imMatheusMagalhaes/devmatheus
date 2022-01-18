@@ -1663,6 +1663,11 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
+typeorm-logger-adaptor@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/typeorm-logger-adaptor/-/typeorm-logger-adaptor-1.0.4.tgz#c52bfb3d980a75ff7c40133938b3b766c5fd0e3a"
+  integrity sha512-92DjVGuRdQ/gm47P4XN+1wFO/7aKf72k4bu+JE+2Uy1/T7YEo20UKUcNXibqkZgxBCd3ZVtxKYgtQlLSM7cfvg==
+
 typeorm@^0.2.41:
   version "0.2.41"
   resolved "https://registry.npmjs.org/typeorm/-/typeorm-0.2.41.tgz"

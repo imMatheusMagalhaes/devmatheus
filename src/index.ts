@@ -7,6 +7,7 @@ import { createConnection } from "typeorm";
 import postRoute from "./controllers/PostController";
 import morganMiddleware from './config/morganMiddleware';
 import Logger from './lib/logger';
+import { WinstonAdaptor } from 'typeorm-logger-adaptor/logger/winston';
 // Porta do servidor
 const PORT = process.env.PORT || 4000
 // Host do servidor
@@ -14,15 +15,16 @@ const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 // Conction with BD
 createConnection(
     {
-        "type": "postgres",
-        "host": "localhost",
-        "port": 5432,
-        "username": process.env.BD_USER || "postgres",
-        "password": process.env.BD_PASS || "postgres",
-        "database": "devmatheus",
-        "synchronize": true,
-        "logging": false,
-        "entities": [
+        type: "postgres",
+        host: "localhost",
+        port: 5432,
+        username: process.env.BD_USER || "postgres",
+        password: process.env.BD_PASS || "postgres",
+        database: "devmatheus",
+        synchronize: true,
+        logging: false,
+        logger: new WinstonAdaptor(Logger, 'all'),
+        entities: [
             "src/entities/**/*.ts"
         ],
         // "migrations": [
