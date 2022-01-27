@@ -39,4 +39,15 @@ postRoute.patch("/posts/:id", async (req, res) => {
   return res.status(HttpStatusCode.CREATED).send(updatedPost);
 });
 
+postRoute.get("/posts/download/:id", async (req, res) => {
+  const postFile = await PostService.findById(req.params.id);
+  if (postFile === HttpStatusCode.INTERNAL_SERVER_ERROR)
+    return res
+      .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+      .send(ErrorMessages.INTERNAL_SERVER_ERROR);
+
+  const pathDownload = (postFile as Post).path;
+  return res.status(HttpStatusCode.OK).download(pathDownload);
+});
+
 export default postRoute;

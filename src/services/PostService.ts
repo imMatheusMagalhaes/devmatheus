@@ -11,8 +11,8 @@ export class PostService {
     return allPosts;
   }
 
-  public static async findOne(): Promise<any> {
-    const post = await Post.findOne();
+  public static async findById(id: string): Promise<any> {
+    const post = await Post.findOne(id);
     if (post) return post;
     return Promise.reject().catch(() => HttpStatusCode.NOT_FOUND);
   }
@@ -48,6 +48,11 @@ export class PostService {
   public static async update(id: string, post: Post): Promise<any> {
     const updatedPost = await Post.update(id, post);
     if (updatedPost) return updatedPost;
+    return Promise.reject().catch(() => HttpStatusCode.INTERNAL_SERVER_ERROR);
+  }
+  public static async downloadPost(id: string): Promise<any> {
+    const post = await Post.findOne(id);
+    if (post) return post;
     return Promise.reject().catch(() => HttpStatusCode.INTERNAL_SERVER_ERROR);
   }
 }
