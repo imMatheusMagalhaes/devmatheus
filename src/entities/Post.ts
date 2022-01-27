@@ -9,12 +9,9 @@ export class Post extends BaseEntity {
 
     @Column()
     titulo: string
-
-    @Column()
-    resumo: string
     
     @Column()
-    conteudo: string
+    path: string
 
     @CreateDateColumn()
     dataCriacao: Date
