@@ -1,6 +1,8 @@
+import { validate } from "class-validator";
+import { CreateUserDto } from "../dtos/CreateUserDto";
 import { User } from "../entities/User";
-import { UserRepository } from "../repositories/UserRepository";
 import HttpStatusCode from "../utils/HttpStatusCode";
+import { cryptPassword } from "../utils/PasswordCryptor";
 
 export class UserService {
   public static async findAll(): Promise<User[]> {
@@ -14,21 +16,28 @@ export class UserService {
     return Promise.reject().catch(() => HttpStatusCode.NOT_FOUND);
   }
 
-  public static async save(userToSave: User): Promise<any> {
+  public static async save(userToSave: CreateUserDto): Promise<any> {
+    // const userExist = await User.findOne({
+    //   where: { email: userToSave.email },
+    // });
     const user = new User();
-    const userExist = await User.findOne({
-      where: { email: userToSave.email },
-    });
-    console.log(userExist);
-    if (!userExist) {
-      user.nome = userToSave.nome;
-      user.email = userToSave.email;
-      user.info = userToSave.info;
+    user.nome = userToSave.nome;
+    user.email = userToSave.email;
+    user.role = userToSave.role;
+    user.info = userToSave.info;
+    user.senha = await cryptPassword(userToSave.senha);
+
+    const errors = await validate(user);
+    if (errors.length > 0)
+      return Promise.reject().catch(() => HttpStatusCode.BAD_REQUEST);
+
+    try {
       const createdUser = await user.save();
       if (createdUser) return createdUser;
-    } else {
-      return userExist;
+    } catch (error) {
+      return Promise.reject().catch(() => HttpStatusCode.CONFLICT);
     }
+
     return Promise.reject().catch(() => HttpStatusCode.INTERNAL_SERVER_ERROR);
   }
 

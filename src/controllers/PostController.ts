@@ -2,11 +2,13 @@ import express from "express";
 import { PostDto } from "../dtos/PostDto";
 import { Post } from "../entities/Post";
 import { PostService } from "../services/PostService";
-import ErrorMessages from "../utils/ErrorMessages";
+import ErrorMessages from "../enums/ErrorMessages";
 import HttpStatusCode from "../utils/HttpStatusCode";
+import permit from "../utils/jwt";
+import Roles from "../enums/Roles";
 const postRoute = express.Router();
 
-postRoute.get("/posts", async (req, res) => {
+postRoute.get("/posts", permit(Roles.USER), async (req, res) => {
   const allPosts = await PostService.findAll();
   return res.status(HttpStatusCode.OK).send(allPosts);
 });
